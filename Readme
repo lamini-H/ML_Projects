@@ -1,9 +1,9 @@
-# ML Projects
+#ML Projects
 
 Machine learning coursework and experiments completed as part of a master's program at Vrije Universiteit Brussel (VUB). The repository contains seven Python/Jupyter notebooks covering classification, regression, statistical learning, and recommendation systems.
 
 
-### [Breast_Cancer_Classification_using_microcalfications.ipynb](Breast_Cancer_Classification_using_microcalfications.ipynb)
+###[Breast_Cancer_Classification_using_microcalfications.ipynb](Breast_Cancer_Classification_using_microcalfications.ipynb)
 
 **Purpose:** Explore benign/malignant classification of individual microcalcifications, then combine predictions into a patient-level cancer classification.
 
@@ -33,7 +33,7 @@ Machine learning coursework and experiments completed as part of a master's prog
 
 **Inputs and reproducibility:** Neither `merged_data.csv` nor the definitions/query code producing `df1`–`df3` is included. Some scaled-data evaluation cells occur before their variables are defined. Imputation and categorical encoding are fitted before splitting, and validation scaling is refitted separately; these choices need review before reproducing or interpreting performance. Main libraries are pandas, NumPy, Matplotlib, seaborn, scikit-learn, and imbalanced-learn.
 
-### [Lithology_Prediction_Logs.ipynb](Lithology_Prediction_Logs.ipynb)
+###[Lithology_Prediction_Logs.ipynb](Lithology_Prediction_Logs.ipynb)
 
 **Purpose:** Predict rock lithology from well-log and geological features, targeting `FORCE_2020_LITHOFACIES_LITHOLOGY`.
 
@@ -48,7 +48,7 @@ Machine learning coursework and experiments completed as part of a master's prog
 
 **Inputs and reproducibility:** The source CSV and imported `improved_models` module are absent, so the later improvement section cannot run from this repository alone. Initial cleaning and label encoding happen before the split. The well-handling code overwrites its helper labels before using them for selection; the later imputer addresses remaining feature missingness. Uses pandas, NumPy, Matplotlib, seaborn, and scikit-learn.
 
-### [Malware_detection_using_memory_dumps.ipynb](Malware_detection_using_memory_dumps.ipynb)
+###[Malware_detection_using_memory_dumps.ipynb](Malware_detection_using_memory_dumps.ipynb)
 
 **Purpose:** Classify pre-extracted memory-dump features as benign or malware, then distinguish benign samples, ransomware, spyware, and trojans.
 
@@ -106,15 +106,15 @@ The notebook includes research questions, theoretical background, conclusions, a
 
 **Inputs and reproducibility:** The training CSV is absent, so its exact column order must be supplied to reproduce the positional feature/target selection. The final chart assumes exactly 100 test predictions. The model image is generated rather than tracked. Uses pandas, NumPy, Matplotlib, seaborn, and TensorFlow/Keras; architecture plotting also needs Keras's diagram dependencies.
 
-### [Readme](Readme)
+###[Readme](Readme)
 
 **Purpose and contents:** The original one-sentence repository introduction states that these projects were completed during the author's master's program at VUB. It contains no setup instructions or per-project descriptions and is retained as the original introduction.
 
-### [README.md](README.md)
+###[README.md](README.md)
 
 **Purpose and contents:** This repository overview and complete file guide, documenting each notebook's task, implementation, expected inputs, outputs, dependencies, and material reproducibility limitations.
 
-## Working with the notebooks
+##Working with the notebooks
 
 Open the `.ipynb` files in Jupyter or Google Colab. Six notebooks include an Open in Colab badge; the SFML notebook can also be uploaded to a notebook environment.
 
