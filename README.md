@@ -1,0 +1,126 @@
+# ML Projects
+
+Machine learning coursework and experiments completed as part of a master's program at Vrije Universiteit Brussel (VUB). The repository contains seven Python/Jupyter notebooks covering classification, regression, statistical learning, and recommendation systems.
+
+
+### [Breast_Cancer_Classification_using_microcalfications.ipynb](Breast_Cancer_Classification_using_microcalfications.ipynb)
+
+**Purpose:** Explore benign/malignant classification of individual microcalcifications, then combine predictions into a patient-level cancer classification.
+
+**Contents and workflow:**
+
+- Reads `brestdataset.csv`, inspects its statistics and class balance, and uses `Patient ID` with `GroupShuffleSplit` to keep patients separate across the initial training, validation, and test partitions. The validation partition is split again for the two tasks.
+- Removes patient identifiers from the model features and scales the inputs. Trains support vector, random forest, and AdaBoost classifiers.
+- Tunes all three classifiers with five-fold `GridSearchCV`; compares cross-validation scores, learning curves, classification reports, normalized confusion matrices, and validation ROC curves.
+- Selects the tuned support vector classifier for the final individual-microcalcification test evaluation.
+- For the second task, takes a majority vote across the three models for each microcalcification, groups these votes by patient, and assigns a positive patient prediction when at least 60% of that patient's votes are positive.
+- Includes explanatory discussion and references about imbalanced classification and breast cancer detection.
+
+**Inputs and reproducibility:** The CSV is not included. The notebook also uses `pd`, `np`, `sns`, and `plt` without importing them in its saved source. Scaling is fitted separately on each partition, and the inner cross-validation is not patient-grouped. The patient aggregation attaches unshuffled patient IDs to predictions on shuffled rows, so that section needs alignment correction before its results can be relied on.
+
+### [ICU_Heart_Failure.ipynb](ICU_Heart_Failure.ipynb)
+
+**Purpose:** Compare classifiers for in-hospital mortality (`hospital_expire_flag`) in an ICU heart-condition cohort using demographic, laboratory, and physiological measurements.
+
+**Contents and workflow:**
+
+- Describes upstream queries aggregating laboratory tests, vital signs, output measurements, height, and weight. Contains merges of `df1`, `df2`, and `df3` by patient, admission, and ICU-stay identifiers, followed by loading and saving `merged_data.csv`.
+- Explores mortality flags, sex and age distributions, temperature, and heart rate with bar, pie, box, and violin plots.
+- Removes identifiers and selected admission fields, imputes numeric values with means, calculates BMI from weight and height, and one-hot encodes gender and ethnicity.
+- Creates 60% training, 20% validation, and 20% test partitions, then applies SMOTE to the training data. Both mortality flags are excluded from the final classifier inputs.
+- Trains logistic regression, random forest, and RBF support vector classifiers. Includes scaled variants, a manually configured random forest, coefficient/feature-importance plots, individual tree diagrams, learning curves, confusion matrices, classification reports, and ROC curves.
+- Performs the final held-out test evaluation using `rf_model`, the initial random forest, rather than the separately configured `random_forest` model.
+
+**Inputs and reproducibility:** Neither `merged_data.csv` nor the definitions/query code producing `df1`–`df3` is included. Some scaled-data evaluation cells occur before their variables are defined. Imputation and categorical encoding are fitted before splitting, and validation scaling is refitted separately; these choices need review before reproducing or interpreting performance. Main libraries are pandas, NumPy, Matplotlib, seaborn, scikit-learn, and imbalanced-learn.
+
+### [Lithology_Prediction_Logs.ipynb](Lithology_Prediction_Logs.ipynb)
+
+**Purpose:** Predict rock lithology from well-log and geological features, targeting `FORCE_2020_LITHOFACIES_LITHOLOGY`.
+
+**Contents and workflow:**
+
+- Loads `/content/CSV_train_reduced.csv`, checks missingness, and drops heavily incomplete log columns.
+- Fills geospatial values with means, selected logging measurements with medians, missing `GROUP`/`FORMATION` values with the string `Missing`, and lithofacies confidence with its mode. Writes `cleaned_dataset.csv`.
+- Explores class frequencies, feature distributions, outliers, and numeric correlations. Reloads the cleaned CSV, drops `Z_LOC`, label-encodes group and formation, attempts well-name/date handling, and removes the original `WELL` column.
+- Creates stratified 70%/15%/15% train/validation/test partitions. Fits a MinMax scaler and a final mean imputer on the training inputs and transforms the other partitions.
+- Trains a decision tree, a 100-tree random forest, and a multilayer perceptron with hidden layers of 100 and 50 units. Compares validation accuracy, classification reports, and confusion matrices.
+- Calls external helpers for regularized models, cross-validation, learning curves, and feature importance, then defines a multiclass one-vs-rest ROC comparison on the test data.
+
+**Inputs and reproducibility:** The source CSV and imported `improved_models` module are absent, so the later improvement section cannot run from this repository alone. Initial cleaning and label encoding happen before the split. The well-handling code overwrites its helper labels before using them for selection; the later imputer addresses remaining feature missingness. Uses pandas, NumPy, Matplotlib, seaborn, and scikit-learn.
+
+### [Malware_detection_using_memory_dumps.ipynb](Malware_detection_using_memory_dumps.ipynb)
+
+**Purpose:** Classify pre-extracted memory-dump features as benign or malware, then distinguish benign samples, ransomware, spyware, and trojans.
+
+**Contents and workflow:**
+
+- Reads `New_Obsfuscated.csv` and defines `feature_selection` to select 18 Volatility-style measurements from callback, DLL, loader-module, memory-injection, module, and process statistics. It consumes tabular features rather than extracting them from raw memory dumps.
+- Encodes the binary `Class` target and compares logistic regression, support vector, and random forest classifiers on a 70%/30% training/validation split.
+- Records process memory usage with psutil and CPU training time. Displays classification reports, confusion matrices, ROC plots, and learning curves; also retrains logistic regression and SVC on MinMax-scaled inputs.
+- Collapses malware subtype strings in `Category` to their leading family names and label-encodes the multiclass target. Trains one-vs-rest random forest, SVC, and logistic regression models on the full four-class dataset.
+- Chooses the multiclass random forest, saves it with joblib as `finalized_rf_model.sav`, and reloads it to demonstrate predictions and probabilities for randomly selected rows from four example CSV files.
+
+**Inputs and reproducibility:** The training CSV and `files/file1.csv`, `files/file2.csv`, `files/file3.csv`, and `files/infectedfile.csv` are not included; the saved model is generated by the notebook, not tracked in the repository. Train/validation splits do not specify a random seed. Validation scaling is fitted independently, and the numeric AUC labels are calculated from hard predictions while the ROC curves use probabilities. Dependencies include scikit-learn, pandas, NumPy, Matplotlib, seaborn, psutil, and joblib.
+
+### [SFML_Final_Project_final.ipynb](SFML_Final_Project_final.ipynb)
+
+**Purpose:** Investigate three questions in statistical machine learning through simulations, comparisons, visualizations, and written interpretation.
+
+**Contents and workflow:**
+
+1. **Outliers and regression:** Generates a noisy two-input sinusoidal surface with and without added outliers. Trains TensorFlow/Keras networks with 64, 64, and 32 hidden units using Adam, MSE, and a learning-rate schedule. Evaluates against the noiseless target surface with loss, MAE, and 3D plots. Includes repeated-run boxplot experiments and a comparison of Huber loss with MSE.
+2. **Ensembles and overfitting:** Compares single decision trees and SVCs with bagging and AdaBoost variants on synthetic classification data and OpenML's Spambase dataset. Uses five-fold learning curves based on negative log loss to discuss training and validation behavior.
+3. **SVM support vectors:** Creates two-dimensional synthetic classification examples with differing class balance, label noise, and class overlap. Visualizes support vectors, margins, and decision boundaries with linear SVMs and an additional RBF example.
+
+The notebook includes research questions, theoretical background, conclusions, and a reference list.
+
+**Inputs and reproducibility:** Most examples generate their data; the Spambase section requires network access. Repeated-run code references undefined arrays such as `x_train_0` and `x_train_outliers_0010`, and several display cells load local `SFML - Boxplot - ...png` images that are not included. The synthetic surface generator creates a mesh grid, so its sample-count and outlier-percentage arguments do not directly equal the resulting row count and outlier fraction. Uses TensorFlow/Keras, scikit-learn, pandas, NumPy, Matplotlib, seaborn, and IPython.
+
+### [SVD_for_Recommendation_Systems.ipynb](SVD_for_Recommendation_Systems.ipynb)
+
+**Purpose:** Explain and demonstrate collaborative-filtering recommendations through truncated singular value decomposition (SVD).
+
+**Contents and workflow:**
+
+- Introduces the SVD factorization and low-rank reconstruction mathematically, with objectives and references.
+- Downloads and unzips MovieLens 100K, reads its tab-separated `u.data` ratings, and pivots them into a user–item matrix with missing ratings filled by zero.
+- Visualizes sparsity for the full matrix and a reduced matrix formed from the 30 most active users and 30 most rated items.
+- Applies NumPy SVD to the reduced matrix, reconstructs it with five components, and plots original ratings, reconstructed ratings, and absolute reconstruction errors.
+- Ranks unrated items by reconstructed score to print up to five recommendations for the first row of the reduced user matrix.
+- Calculates RMSE on known ratings and plots reconstruction RMSE for component counts from 2 through 20.
+
+**Inputs and reproducibility:** Data is downloaded within the notebook using `wget` and `unzip`, requiring network access and those command-line utilities (as commonly available in Colab). Uses pandas, NumPy, Matplotlib, seaborn, and scikit-learn. RMSE is measured on the same known ratings used for factorization, so it measures reconstruction fit rather than held-out recommendation quality. Printed user numbering is a row position, not necessarily the original MovieLens user ID.
+
+### [car_prediction_model.ipynb](car_prediction_model.ipynb)
+
+**Purpose:** Train a neural network to regress car prices from numeric vehicle attributes.
+
+**Contents and workflow:**
+
+- Loads `/content/train.csv` and plots relationships among age, kilometres, rating, condition, economy, top speed, horsepower, torque, and current price.
+- Converts the data to float32 TensorFlow tensors and shuffles rows. Selects input columns positionally with `[:, 3:-1]` and the final column as the target.
+- Divides the shuffled data into 80% training, 10% validation, and 10% test partitions. Builds batched, shuffled, prefetched `tf.data` datasets.
+- Adapts a normalization layer on the training features and builds a Keras model expecting eight inputs, with four 128-unit ReLU layers and one scalar output.
+- Trains for 100 epochs using Adam with learning rate 0.1, mean absolute error loss, and RMSE as a metric.
+- Plots training/validation loss and RMSE, evaluates on the test tensors, and compares predicted and actual prices in a bar chart. Also writes a model architecture image to `model.png`.
+
+**Inputs and reproducibility:** The training CSV is absent, so its exact column order must be supplied to reproduce the positional feature/target selection. The final chart assumes exactly 100 test predictions. The model image is generated rather than tracked. Uses pandas, NumPy, Matplotlib, seaborn, and TensorFlow/Keras; architecture plotting also needs Keras's diagram dependencies.
+
+### [Readme](Readme)
+
+**Purpose and contents:** The original one-sentence repository introduction states that these projects were completed during the author's master's program at VUB. It contains no setup instructions or per-project descriptions and is retained as the original introduction.
+
+### [README.md](README.md)
+
+**Purpose and contents:** This repository overview and complete file guide, documenting each notebook's task, implementation, expected inputs, outputs, dependencies, and material reproducibility limitations.
+
+## Working with the notebooks
+
+Open the `.ipynb` files in Jupyter or Google Colab. Six notebooks include an Open in Colab badge; the SFML notebook can also be uploaded to a notebook environment.
+
+- Supply the external datasets and supporting files identified above, then adjust hard-coded paths such as `/content/...` for your environment.
+- Install the libraries used by the selected notebook. There is no dependency manifest or pinned environment, and some scikit-learn/Keras arguments may require compatible versions or updates.
+- Review the noted missing imports, helper files, variable order, and preprocessing issues before running all cells from a fresh kernel.
+- Notebook outputs include saved plots and reports, but they do not establish that every cell can run sequentially from a clean environment.
+
+The reviewed repository contains no datasets, standalone Python modules, saved model files, tests, or environment configuration. Generated CSVs, model files, and images mentioned above are outputs or external dependencies, not additional tracked files.
