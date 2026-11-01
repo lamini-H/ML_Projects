@@ -106,14 +106,6 @@ The notebook includes research questions, theoretical background, conclusions, a
 
 **Inputs and reproducibility:** The training CSV is absent, so its exact column order must be supplied to reproduce the positional feature/target selection. The final chart assumes exactly 100 test predictions. The model image is generated rather than tracked. Uses pandas, NumPy, Matplotlib, seaborn, and TensorFlow/Keras; architecture plotting also needs Keras's diagram dependencies.
 
-### [Readme](Readme)
-
-**Purpose and contents:** The original one-sentence repository introduction states that these projects were completed during the author's master's program at VUB. It contains no setup instructions or per-project descriptions and is retained as the original introduction.
-
-### [README.md](README.md)
-
-**Purpose and contents:** This repository overview and complete file guide, documenting each notebook's task, implementation, expected inputs, outputs, dependencies, and material reproducibility limitations.
-
 ## Working with the notebooks
 
 Open the `.ipynb` files in Jupyter or Google Colab. Six notebooks include an Open in Colab badge; the SFML notebook can also be uploaded to a notebook environment.
